@@ -1,10 +1,18 @@
-import React from 'react'
+import React from "react";
 
-function Divider() {
+type DividerProps = {
+  color?: string;
+  width?: number;
+  height?: number; 
+  className?: string; 
+};
+
+const Divider: React.FC<DividerProps> = ({ color = "bg-black", width = 1, height = 1, className = "" }) => {
   return (
-    <div className='w-full h-[1px] bg-black'></div>
+    <div
+      className={`w-[${width}px] h-[${height}px] ${color} ${className}`} 
+    />
+  );
+};
 
-  )
-}
-
-export default Divider
+export default Divider;
