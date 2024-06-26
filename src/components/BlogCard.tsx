@@ -23,7 +23,8 @@ const BlogCard: React.FC<BlogCardProps> = ({ imageUrl, title, category, date, co
 
   return (
     <div>
-        <img  src={imageUrl} alt={title} className='rounded-md md:mb-10 mb-5 w-full' />      <Divider color="bg-dgreen" />
+        <img  src={imageUrl} alt={title} className='rounded-md md:mb-10 mb-5 w-full' />      
+        <Divider color="bg-dgreen" />
       <div className='mt-3 mb-5 flex justify-between text-xs text-dgreen'>
         <span>{category.toUpperCase()}</span>
         <span>{date.toUpperCase()}</span>
