@@ -1,9 +1,9 @@
 import BlogCard from "@/components/BlogCard";
 import { Button } from "@/components/ui/button";
 import Hero from "@/components/Hero";
-import Footer from "@/components/Footer";
 import { Input } from "@/components/ui/input";
 import React from "react";
+import Footer from "@/components/Footer";
 
 function Home() {
   return (

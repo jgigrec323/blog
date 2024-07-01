@@ -2,24 +2,24 @@ import React from 'react'
 import Logo from './Logo'
 import Link from 'next/link'
 import { Button } from './ui/button'
+import NavlinksItem from './NavlinksItem'
+import MobileNavigation from './MobileNavigation'
 
 function Navbar() {
   return (
-    <nav className='flex items-center justify-between pt-5 pb-3 px-28 
+    <nav className='flex items-center justify-between pt-5 pb-3 lg:px-28 sm:px-16 px-10
     text-sm border-b '>
     
       <Logo></Logo>
+
+      {/* mobile */}
+      <MobileNavigation></MobileNavigation>
       
-      <ul className='flex ml-16 gap-5'>
-        <li>All articles</li>
-        <li>Culture</li>
-        <li>Sports</li>
-        <li>Traveling</li>
-      </ul>
+     <NavlinksItem></NavlinksItem>
   
-      <div className='flex gap-5 items-center'>
+      <div className='md:flex gap-5 items-center hidden'>
         <Link href={"/about"}>About</Link>
-        <Button className='bg-dgreen'>Subscribe</Button>
+        <Button variant={"outline"} className='bg-dgreen text-dgreen-foreground'>Subscribe</Button>
       </div>
     </nav>
   )
