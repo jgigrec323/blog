@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,11 +15,17 @@ import {
 } from "@/components/ui/sheet";
 import { IoIosMenu } from "react-icons/io";
 import Logo from "./Logo";
-import NavlinksItem from "./NavlinksItem";
 import Link from "next/link";
-import Divider from "./Divider";
+import { usePathname } from "next/navigation";
 
 const MobileNavigation = () => {
+  const currentPath = usePathname();
+  const links = [
+    { href: "/all-articles", label: "All articles" },
+    { href: "/culture", label: "Culture" },
+    { href: "/sport", label: "Sport" },
+    { href: "/travelling", label: "Travelling" },
+  ];
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -32,18 +39,28 @@ const MobileNavigation = () => {
         </SheetHeader>
         <div className="space-y-4">
           <ul className="flex flex-col mt-7 gap-4">
-            <li>All articles</li>
-            <li>Culture</li>
-            <li>Sports</li>
-            <li>Traveling</li>
+            {links.map((link) => (
+              <li key={link.href}>
+                <Link
+                  className={currentPath === link.href ? "text-dgreen font-bold" : ""}
+                  href={link.href}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
           </ul>
           <div className="flex flex-col gap-4 ">
-            <Link href={"/about"}>About</Link>
-            <Button variant={"outline"} className="bg-dgreen text-dgreen-foreground">Subscribe</Button>
+            <Link href={"/about"}  className={currentPath === "/about" ? "text-dgreen font-bold" : ""}>About</Link>
+            <Button
+              variant={"outline"}
+              className="bg-dgreen text-dgreen-foreground"
+            >
+              Buy me a coffee
+            </Button>
           </div>
         </div>
-        <SheetFooter>
-        </SheetFooter>
+        <SheetFooter></SheetFooter>
       </SheetContent>
     </Sheet>
   );
