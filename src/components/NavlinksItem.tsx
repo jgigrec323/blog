@@ -1,26 +1,57 @@
 "use client";
 import Link from "next/link";
-import React from "react";
-import { Button } from "./ui/button";
+import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { fetchCategories } from "@/actions/categoriesActions";
+import { Category } from "@/lib/types";
 
 const NavlinksItem = () => {
   const currentPath = usePathname();
-  const links = [
-    { href: "/all-articles", label: "All articles" },
-    { href: "/culture", label: "Culture" },
-    { href: "/sport", label: "Sport" },
-    { href: "/travelling", label: "Travelling" },
-  ];
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    async function getCategories() {
+      try {
+        const fetchedCategories = await fetchCategories();
+        setCategories(fetchedCategories);
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    }
+
+    getCategories();
+  }, []);
+
+  function transformLinkToTitle(link: string): string {
+    const cleanLink = link.replace(/^\/|\/$/g, "");
+    return cleanLink
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  }
+
   return (
     <ul className="md:flex ml-16 gap-5 hidden">
-      {links.map((link) => (
-        <li key={link.href}>
+      <Link
+        href={"/all-articles"}
+        className={
+          currentPath === "/all-articles" ? "text-dgreen font-bold" : ""
+        }
+      >
+        All Articles
+      </Link>
+
+      {categories.map((category) => (
+        <li key={category.name}>
           <Link
-            className={currentPath === link.href ? "text-dgreen font-bold" : ""}
-            href={link.href}
+            className={
+              currentPath === `/${category.name.toLowerCase()}`
+                ? "text-dgreen font-bold"
+                : ""
+            }
+            href={`/${category.name.toLowerCase()}`}
           >
-            {link.label}
+            {transformLinkToTitle(category.name)}
           </Link>
         </li>
       ))}

@@ -1,13 +1,10 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Sheet,
   SheetClose,
   SheetContent,
-  SheetDescription,
   SheetFooter,
   SheetHeader,
   SheetTitle,
@@ -17,15 +14,34 @@ import { IoIosMenu } from "react-icons/io";
 import Logo from "./Logo";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { fetchCategories } from "@/actions/categoriesActions";
+import { Category } from "@/lib/types";
 
-const MobileNavigation = () => {
+const MobileNavigation: React.FC = () => {
   const currentPath = usePathname();
-  const links = [
-    { href: "/all-articles", label: "All articles" },
-    { href: "/culture", label: "Culture" },
-    { href: "/sport", label: "Sport" },
-    { href: "/travelling", label: "Travelling" },
-  ];
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  useEffect(() => {
+    async function getCategories() {
+      try {
+        const fetchedCategories = await fetchCategories();
+        setCategories(fetchedCategories);
+      } catch (error) {
+        console.error("Failed to fetch categories:", error);
+      }
+    }
+
+    getCategories();
+  }, []);
+
+  function transformLinkToTitle(link: string): string {
+    const cleanLink = link.replace(/^\/|\/$/g, "");
+    return cleanLink
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  }
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -34,24 +50,46 @@ const MobileNavigation = () => {
       <SheetContent>
         <SheetHeader>
           <SheetTitle className="text-start mt-5">
-            <Logo></Logo>
+            <Logo />
           </SheetTitle>
         </SheetHeader>
         <div className="space-y-4">
           <ul className="flex flex-col mt-7 gap-4">
-            {links.map((link) => (
-              <li key={link.href}>
+            <li>
+              <Link
+                href="/all-articles"
+                className={
+                  currentPath === "/all-articles" ? "text-dgreen font-bold" : ""
+                }
+              >
+                All Articles
+              </Link>
+            </li>
+
+            {categories.map((category) => (
+              <li key={category.name}>
                 <Link
-                  className={currentPath === link.href ? "text-dgreen font-bold" : ""}
-                  href={link.href}
+                  className={
+                    currentPath === `/${category.name.toLowerCase()}`
+                      ? "text-dgreen font-bold"
+                      : ""
+                  }
+                  href={`/${category.name.toLowerCase()}`}
                 >
-                  {link.label}
+                  {transformLinkToTitle(category.name)}
                 </Link>
               </li>
             ))}
           </ul>
           <div className="flex flex-col gap-4 ">
-            <Link href={"/about"}  className={currentPath === "/about" ? "text-dgreen font-bold" : ""}>About</Link>
+            <Link
+              href="/about"
+              className={
+                currentPath === "/about" ? "text-dgreen font-bold" : ""
+              }
+            >
+              About
+            </Link>
             <Button
               variant={"outline"}
               className="bg-dgreen text-dgreen-foreground"
