@@ -28,34 +28,24 @@ const AllArticles = () => {
   if (error) return <p>{error}</p>;
   return (
     <>
-      <BlogCard
-        content="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Reiciendis necessitatibus amet hic! Magnam, repellendus excepturi!"
-        category="Musique"
-        date="Nov 25"
-        imageUrl="https://images.pexels.com/photos/19802887/pexels-photo-19802887/free-photo-of-ciel-industrie-gare-station.jpeg"
-        title="This is a test for the blog card"
-      ></BlogCard>
-      <BlogCard
-        content="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Reiciendis necessitatibus amet hic! Magnam, repellendus excepturi!"
-        category="Musique"
-        date="Nov 25"
-        imageUrl="https://images.pexels.com/photos/19802887/pexels-photo-19802887/free-photo-of-ciel-industrie-gare-station.jpeg"
-        title="This is a test for the blog card"
-      ></BlogCard>
-      <BlogCard
-        content="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Reiciendis necessitatibus amet hic! Magnam, repellendus excepturi!"
-        category="Musique"
-        date="Nov 25"
-        imageUrl="https://images.pexels.com/photos/19802887/pexels-photo-19802887/free-photo-of-ciel-industrie-gare-station.jpeg"
-        title="This is a test for the blog card"
-      ></BlogCard>
-      <BlogCard
-        content="Lorem ipsum, dolor sit amet consectetur adipisicing elit. Reiciendis necessitatibus amet hic! Magnam, repellendus excepturi!"
-        category="Musique"
-        date="Nov 25"
-        imageUrl="https://images.pexels.com/photos/19802887/pexels-photo-19802887/free-photo-of-ciel-industrie-gare-station.jpeg"
-        title="This is a test for the blog card"
-      ></BlogCard>
+      {posts.map((post) => (
+        <BlogCard
+          key={post.id}
+          content={post.content}
+          category={
+            post.categories.length > 0
+              ? post.categories[0].name
+              : "Uncategorized"
+          }
+          date={new Date(post.createdAt).toLocaleDateString()}
+          imageUrl={
+            post.images.length > 0
+              ? `${process.env.NEXT_PUBLIC_BASE_URL}${post.images[0].url}`
+              : "https://images.pexels.com/photos/19802887/pexels-photo-19802887/free-photo-of-ciel-industrie-gare-station.jpeg"
+          } // Use a default image URL if none is provided
+          title={post.title}
+        />
+      ))}
     </>
   );
 };
