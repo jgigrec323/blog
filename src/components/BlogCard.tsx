@@ -69,7 +69,7 @@ const BlogCard: React.FC<BlogCardProps> = ({
       <img
         src={imageUrl}
         alt={title}
-        className="rounded-md md:mb-10 mb-5 w-full"
+        className="rounded-md md:mb-6 mb-5 w-full  h-56 object-cover object-center"
       />
       <Divider color="bg-dgreen" />
       <div className="mt-3 mb-5 flex justify-between text-xs text-dgreen">
