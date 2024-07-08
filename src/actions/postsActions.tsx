@@ -19,3 +19,21 @@ export async function fetchPosts(): Promise<Post[]> {
     throw error;
   }
 }
+export async function fetchPostsByTitle(title: string): Promise<Post> {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_BASE_URL}/post/${title}`
+    );
+    const data = await response.json();
+    console.log(data);
+
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to fetch posts");
+    }
+
+    return data.post;
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    throw error;
+  }
+}

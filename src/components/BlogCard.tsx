@@ -53,7 +53,7 @@ const BlogCard: React.FC<BlogCardProps> = ({
     ],
   });
   const transformTitleToLink = (title: string) => {
-    let link = title.toLowerCase();
+    let link = title;
 
     link = link.replace(/\s+/g, "-");
 
