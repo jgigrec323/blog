@@ -12,6 +12,7 @@ export interface Post {
     images: Image[];
     views: number;
     shares: number;
+    isFeatured:boolean
   }
   
   export interface Category {

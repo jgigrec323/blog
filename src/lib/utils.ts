@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-export const formatDate = (inputDate:string) => {
+/* export const formatDate = (inputDate:string) => {
   const parts = inputDate.split('/').map(part => parseInt(part, 10));
   
   const dateObject = new Date(parts[2], parts[1] - 1, parts[0]);
@@ -21,4 +21,12 @@ export const formatDate = (inputDate:string) => {
   let formatedDate:string =`${month} ${year}`
 
   return formatedDate.toUpperCase() ;
-};
+}; */
+export function formatDate(dateString: string): string {
+  const date = new Date(dateString);
+  return date.toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+}

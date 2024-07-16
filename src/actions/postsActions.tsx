@@ -19,6 +19,7 @@ export async function fetchPosts(): Promise<Post[]> {
     throw error;
   }
 }
+
 export async function fetchPostsByTitle(title: string): Promise<Post> {
   try {
     const response = await fetch(
