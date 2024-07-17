@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { fetchPostsByTitle, fetchPosts } from "@/actions/postsActions";
 import { Category, Tag, Post } from "@/lib/types"; // Adjust according to your types
 import BlogCard from "@/components/BlogCard"; // Import the BlogCard component
+import SidedPosts from "@/components/SidedPosts";
 
 const PostView = () => {
   const router = useRouter();
@@ -30,14 +31,20 @@ const PostView = () => {
         setLoading(false);
       }
     }
+    const transformTitleToLink = (title: string) => {
+      let link = title;
+      link = link.replace(/\s+/g, "-");
+      link = link.replace(/[^\w\-]+/g, "");
+      return link;
+    };
 
     async function fetchSuggestedPosts() {
       try {
         const fetchedPosts = await fetchPosts();
         // Exclude the current post and limit to 3 suggested posts
         const filteredPosts = fetchedPosts
-          .filter((p) => p.title !== postTitle)
-          .slice(0, 3);
+          .filter((p) => transformTitleToLink(p.title) !== postTitle)
+          .slice(0, 4);
         setSuggestedPosts(filteredPosts);
       } catch (error) {
         console.error("Failed to fetch suggested posts", error);
@@ -61,7 +68,7 @@ const PostView = () => {
             <img
               src={`${process.env.NEXT_PUBLIC_BASE_URL}${post.images[0].url}`}
               alt={post.title}
-              className="w-full h-auto object-cover rounded-lg shadow-md"
+              className="w-full h-auto object-cover rounded-lg "
             />
           ) : (
             "No Image"
@@ -89,6 +96,9 @@ const PostView = () => {
               <span>No Tags</span>
             )}
           </div>
+          <div>
+            <Badge variant="secondary">{post?.views} views</Badge>
+          </div>
         </div>
         <div className="mt-10">
           <div
@@ -98,19 +108,21 @@ const PostView = () => {
         </div>
       </div>
       <div className="lg:col-span-1">
-        <h2 className="text-2xl font-bold mb-4">Suggested Posts</h2>
+        <h2 className="text-2xl font-bold mb-10 text-dgreen">
+          Suggested Posts
+        </h2>
         <div className="space-y-4">
           {suggestedPosts.map((suggestedPost) => (
-            <BlogCard
+            <SidedPosts
               key={suggestedPost.id}
+              views={suggestedPost.views}
+              readingTime={1}
+              date={new Date(suggestedPost.createdAt).toISOString()}
+              title={suggestedPost.title}
               imageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}${
                 suggestedPost.images[0]?.url || "/default-image.jpg"
               }`}
-              title={suggestedPost.title}
-              category={suggestedPost.categories[0]?.name || "Uncategorized"}
-              date={new Date(suggestedPost.createdAt).toISOString()}
-              content={suggestedPost.content}
-            />
+            ></SidedPosts>
           ))}
         </div>
       </div>

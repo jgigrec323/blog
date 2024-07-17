@@ -1,6 +1,7 @@
 "use client";
 import { fetchPosts } from "@/actions/postsActions";
 import BlogCard from "@/components/BlogCard";
+import CustomLoader from "@/components/CustomLoader";
 import { Post } from "@/lib/types";
 import React, { useEffect, useState } from "react";
 
@@ -24,7 +25,12 @@ const AllArticles = () => {
     getPosts();
   }, []);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading)
+    return (
+      <div className="relative w-full h-56">
+        <CustomLoader></CustomLoader>
+      </div>
+    );
   if (error) return <p>{error}</p>;
   return (
     <>
@@ -37,7 +43,7 @@ const AllArticles = () => {
               ? post.categories[0].name
               : "Uncategorized"
           }
-          date={new Date(post.createdAt).toLocaleDateString()}
+          date={post.createdAt.toString()}
           imageUrl={
             post.images.length > 0
               ? `${process.env.NEXT_PUBLIC_BASE_URL}${post.images[0].url}`

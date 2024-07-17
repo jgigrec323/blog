@@ -47,7 +47,7 @@ function Home() {
       <Hero></Hero>
       <section className="mt-20 lg:px-28 sm:px-16 px-10 lg:grid md:grid-cols-2 md:gap-x-8 lg:gap-x-10">
         <div>
-          <h2 className="mb-5">Featured</h2>
+          <h2 className="mb-5 text-dgreen">Featured</h2>
           <div className="grid grid-cols-1 gap-y-14 mb-10">
             {featuredPosts.map((post) => (
               <BlogCard
@@ -67,7 +67,7 @@ function Home() {
           </div>
         </div>
         <div>
-          <h2 className="mb-5">Recent</h2>
+          <h2 className="mb-5 text-dgreen">Recent</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-10 gap-x-6">
             {recentPosts.map((post) => (
               <BlogCard
