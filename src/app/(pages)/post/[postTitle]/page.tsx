@@ -2,10 +2,15 @@
 import { Badge } from "@/components/ui/badge";
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { fetchPostsByTitle, fetchPosts } from "@/actions/postsActions";
+import {
+  fetchPostsByTitle,
+  fetchPosts,
+  incrementViewCount,
+} from "@/actions/postsActions";
 import { Category, Tag, Post } from "@/lib/types"; // Adjust according to your types
 import BlogCard from "@/components/BlogCard"; // Import the BlogCard component
 import SidedPosts from "@/components/SidedPosts";
+import { calculateReadingTime } from "@/lib/utils";
 
 const PostView = () => {
   const router = useRouter();
@@ -25,12 +30,16 @@ const PostView = () => {
         setPost(fetchedPost);
         setCategories(fetchedPost.categories);
         setTags(fetchedPost.tags);
+
+        // Increment the view count
+        await incrementViewCount(postTitle as string);
       } catch (error) {
         setError("Failed to fetch post");
       } finally {
         setLoading(false);
       }
     }
+
     const transformTitleToLink = (title: string) => {
       let link = title;
       link = link.replace(/\s+/g, "-");
@@ -60,13 +69,15 @@ const PostView = () => {
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
+  const readingTime = post ? calculateReadingTime(post.content) : 0;
+
   return (
     <div className="mt-10 lg:grid lg:grid-cols-3 lg:gap-10">
       <div className="lg:col-span-2">
         <div>
-          {post.images && post.images.length > 0 ? (
+          {post?.images && post?.images.length > 0 ? (
             <img
-              src={`${process.env.NEXT_PUBLIC_BASE_URL}${post.images[0].url}`}
+              src={`${process.env.NEXT_PUBLIC_BASE_URL}${post?.images[0].url}`}
               alt={post.title}
               className="w-full h-auto object-cover rounded-lg "
             />
@@ -75,9 +86,9 @@ const PostView = () => {
           )}
         </div>
         <div className="my-4">
-          <h1 className="text-4xl font-bold">{post.title}</h1>
+          <h1 className="text-4xl font-bold">{post?.title}</h1>
         </div>
-        <div className="flex items-center gap-10">
+        <div className="flex items-center gap-5">
           <div>
             {categories.map((category, index) => (
               <Badge key={index} variant="outline">
@@ -96,13 +107,14 @@ const PostView = () => {
               <span>No Tags</span>
             )}
           </div>
-          <div>
+          <div className="ml-5">
             <Badge variant="secondary">{post?.views} views</Badge>
+            <Badge variant="secondary">{readingTime} min read</Badge>
           </div>
         </div>
         <div className="mt-10">
           <div
-            dangerouslySetInnerHTML={{ __html: post.content }}
+            dangerouslySetInnerHTML={{ __html: post?.content }}
             className="prose lg:prose-xl"
           />
         </div>
@@ -112,18 +124,23 @@ const PostView = () => {
           Suggested Posts
         </h2>
         <div className="space-y-4">
-          {suggestedPosts.map((suggestedPost) => (
-            <SidedPosts
-              key={suggestedPost.id}
-              views={suggestedPost.views}
-              readingTime={1}
-              date={new Date(suggestedPost.createdAt).toISOString()}
-              title={suggestedPost.title}
-              imageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}${
-                suggestedPost.images[0]?.url || "/default-image.jpg"
-              }`}
-            ></SidedPosts>
-          ))}
+          {suggestedPosts.map((suggestedPost) => {
+            const suggestedReadingTime = calculateReadingTime(
+              suggestedPost.content
+            );
+            return (
+              <SidedPosts
+                key={suggestedPost.id}
+                views={suggestedPost.views}
+                readingTime={suggestedReadingTime}
+                date={new Date(suggestedPost.createdAt).toISOString()}
+                title={suggestedPost.title}
+                imageUrl={`${process.env.NEXT_PUBLIC_BASE_URL}${
+                  suggestedPost.images[0]?.url || "/default-image.jpg"
+                }`}
+              />
+            );
+          })}
         </div>
       </div>
     </div>
