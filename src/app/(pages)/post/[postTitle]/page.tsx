@@ -11,6 +11,7 @@ import { Category, Tag, Post } from "@/lib/types"; // Adjust according to your t
 import BlogCard from "@/components/BlogCard"; // Import the BlogCard component
 import SidedPosts from "@/components/SidedPosts";
 import { calculateReadingTime } from "@/lib/utils";
+import Comments from "@/components/Comments";
 
 const PostView = () => {
   const router = useRouter();
@@ -118,9 +119,10 @@ const PostView = () => {
             className="prose lg:prose-xl"
           />
         </div>
+        <Comments postId={post?.id}></Comments>
       </div>
       <div className="lg:col-span-1">
-        <h2 className="text-2xl font-bold mb-10 text-dgreen">
+        <h2 className="text-2xl font-bold mb-10 text-dgreen mt-20 lg:mt-0 ">
           Suggested Posts
         </h2>
         <div className="space-y-4">

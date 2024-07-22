@@ -36,3 +36,9 @@ export function calculateReadingTime(content: string): number {
   const readingTime = Math.ceil(words / wordsPerMinute);
   return readingTime;
 }
+
+export function getInitials (name : string) : string {
+  const names = name.split(" ");
+  const initials = names.map(name => name.charAt(0).toUpperCase()).join("")
+  return initials;
+}

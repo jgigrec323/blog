@@ -33,6 +33,7 @@ export interface Post {
     createdAt: Date;
     postId: number;
     post: Post;
+    author:string;
   }
   
   export interface Image {
