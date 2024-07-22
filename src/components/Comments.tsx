@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Divider from "./Divider";
 import { Textarea } from "./ui/textarea";
+import { Input } from "./ui/input"; // Import Input component
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import CommentCard from "./CommentCard";
@@ -17,6 +18,8 @@ const Comments: React.FC<CommentsProps> = ({ postId = -1 }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [content, setContent] = useState<string>("");
+  const [author, setAuthor] = useState<string>(""); // State for author name
+  const [password, setPassword] = useState<string>(""); // State for password
 
   useEffect(() => {
     async function getComments() {
@@ -39,10 +42,17 @@ const Comments: React.FC<CommentsProps> = ({ postId = -1 }) => {
   const handleCommentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!author) {
+      alert("Please enter your name and password.");
+      return;
+    }
+
     try {
-      const newComment = await createComment(content, postId, "Anonymous"); // Replace "Anonymous" with actual user name
+      const newComment = await createComment(content, postId, author);
       setComments((prevComments) => [newComment, ...prevComments]);
       setContent("");
+      setAuthor("");
+      setPassword("");
     } catch (error) {
       console.error("Failed to create comment:", error);
     }
@@ -55,14 +65,22 @@ const Comments: React.FC<CommentsProps> = ({ postId = -1 }) => {
       </h2>
       <Divider className="bg-dgreen mt-4 mb-5" />
       <form onSubmit={handleCommentSubmit}>
+        <Input
+          type="text"
+          value={author}
+          onChange={(e) => setAuthor(e.target.value)}
+          placeholder="Your Name"
+          className="mb-4"
+        />
         <Textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="Write something..."
+          className="mb-4"
         />
         <Button
           variant="outline"
-          className="bg-dgreen text-dgreen-foreground mt-4"
+          className="bg-dgreen text-dgreen-foreground"
           type="submit"
         >
           Comment
