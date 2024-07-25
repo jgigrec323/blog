@@ -32,6 +32,7 @@ export interface Post {
     content: string;
     createdAt: Date;
     postId: number;
+    likes:number;
     post: Post;
     author:string;
   }

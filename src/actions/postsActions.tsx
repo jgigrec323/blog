@@ -100,7 +100,7 @@ export async function fetchCommentsByPostId(
       throw new Error(data.message || "Failed to fetch comments");
     }
 
-    return data.comments;
+    return data.comments || [];
   } catch (error) {
     console.error("Error fetching comments:", error);
     throw error;

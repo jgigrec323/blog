@@ -54,10 +54,12 @@ const BlogCard: React.FC<BlogCardProps> = ({
   });
 
   const transformTitleToLink = (title: string) => {
-    let link = title;
-    link = link.replace(/\s+/g, "-");
-    link = link.replace(/[^\w\-]+/g, "");
-    return link;
+    return title
+      .normalize("NFD") // Normalize the string to decompose accented characters
+      .replace(/[\u0300-\u036f]/g, "") // Remove the decomposed diacritical marks
+      .replace(/\s+/g, "-") // Replace spaces with hyphens
+      .replace(/[^\w\-]+/g, "") // Remove non-word characters except for hyphens
+      .toLowerCase(); // Convert the string to lowercase
   };
 
   const handleOnClick = () => {
@@ -77,10 +79,10 @@ const BlogCard: React.FC<BlogCardProps> = ({
         <span>{formatDate(date.toUpperCase())}</span>
       </div>
       <h2 className={featuredTitleClass}>{title}</h2>
-      <p
+      {/*    <p
         dangerouslySetInnerHTML={{ __html: sanitizedContent }}
         className="text-gray-400 mt-1 lg:text-sm"
-      ></p>
+      ></p> */}
     </div>
   );
 };

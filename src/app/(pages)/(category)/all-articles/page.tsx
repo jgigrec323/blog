@@ -14,7 +14,12 @@ const AllArticles = () => {
     async function getPosts() {
       try {
         const fetchedPosts = await fetchPosts();
-        setPosts(fetchedPosts);
+        // Sort posts by date in descending order
+        const sortedPosts = fetchedPosts.sort(
+          (a, b) =>
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+        );
+        setPosts(sortedPosts);
       } catch (error) {
         setError("Failed to fetch posts");
       } finally {
@@ -28,10 +33,11 @@ const AllArticles = () => {
   if (loading)
     return (
       <div className="relative w-full h-56">
-        <CustomLoader></CustomLoader>
+        <CustomLoader />
       </div>
     );
   if (error) return <p>{error}</p>;
+
   return (
     <>
       {posts.map((post) => (

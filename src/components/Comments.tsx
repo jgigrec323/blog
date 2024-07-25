@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Divider from "./Divider";
 import { Textarea } from "./ui/textarea";
-import { Input } from "./ui/input"; // Import Input component
+import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
 import CommentCard from "./CommentCard";
@@ -13,13 +13,12 @@ interface CommentsProps {
   postId: number;
 }
 
-const Comments: React.FC<CommentsProps> = ({ postId = -1 }) => {
+const Comments: React.FC<CommentsProps> = ({ postId }) => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [content, setContent] = useState<string>("");
-  const [author, setAuthor] = useState<string>(""); // State for author name
-  const [password, setPassword] = useState<string>(""); // State for password
+  const [author, setAuthor] = useState<string>("");
 
   useEffect(() => {
     async function getComments() {
@@ -43,7 +42,7 @@ const Comments: React.FC<CommentsProps> = ({ postId = -1 }) => {
     e.preventDefault();
 
     if (!author) {
-      alert("Please enter your name and password.");
+      alert("Please enter your name.");
       return;
     }
 
@@ -52,7 +51,6 @@ const Comments: React.FC<CommentsProps> = ({ postId = -1 }) => {
       setComments((prevComments) => [newComment, ...prevComments]);
       setContent("");
       setAuthor("");
-      setPassword("");
     } catch (error) {
       console.error("Failed to create comment:", error);
     }
@@ -96,8 +94,8 @@ const Comments: React.FC<CommentsProps> = ({ postId = -1 }) => {
             <CommentCard
               key={comment.id}
               name={comment.author}
-              likes={comment.likes || 0} // assuming likes are part of comment object
-              date={comment.createdAt}
+              likes={comment.likes || 0}
+              date={comment.createdAt.toString()}
               content={comment.content}
             />
           ))

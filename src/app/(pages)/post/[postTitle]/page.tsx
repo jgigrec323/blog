@@ -67,6 +67,28 @@ const PostView = () => {
     }
   }, [postTitle]);
 
+  const handleShare = async () => {
+    const shareData = {
+      title: post?.title || "Post",
+      text: post?.title || "Check out this post",
+      url: window.location.href,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+      } catch (error) {
+        console.error("Error sharing:", error);
+      }
+    } else {
+      // Fallback: Copy link to clipboard
+      navigator.clipboard.writeText(shareData.url).then(
+        () => alert("Link copied to clipboard!"),
+        (err) => console.error("Failed to copy link:", err)
+      );
+    }
+  };
+
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
 
@@ -118,6 +140,14 @@ const PostView = () => {
             dangerouslySetInnerHTML={{ __html: post?.content }}
             className="prose lg:prose-xl"
           />
+        </div>
+        <div className="mt-4">
+          <button
+            onClick={handleShare}
+            className="px-4 py-2 bg-dgreen text-white rounded-lg"
+          >
+            Share this post
+          </button>
         </div>
         <Comments postId={post?.id}></Comments>
       </div>
